@@ -1,0 +1,17 @@
+{
+    "name": "phalski/skipass",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Philipp Michalski",
+            "email": "mail@phalski.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    }
+}
