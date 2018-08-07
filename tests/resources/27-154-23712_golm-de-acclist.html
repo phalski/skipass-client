@@ -1,0 +1,463 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>Ticketbeauskunftung.</title>
+    <meta http-equiv="content-type" content="text/html;charset=iso-8859-1" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta http-equiv="pargma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <link rel="stylesheet" type="text/css" href="/styles.css" />
+</head>
+<body>
+<div id="container_top">
+    <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+            <td class="maintitle">Kartenverfolgung</td>
+            <td><img src="/images/ax-trans.gif" alt="Axess AG - Your're welcome!" class="logo_top" /></td>
+        </tr>
+    </table>
+</div>
+<div id="languages"><a href="/golm/de/acclist.php"><img src="/images/locale/de.gif" alt="" title="Deutsch" /></a>
+    <a href="/golm/en/acclist.php"><img src="/images/locale/gb.gif" alt="" title="English" /></a>
+    <a href="/golm/sv/acclist.php"><img src="/images/locale/sv.gif" alt="" title="Svenska" /></a>
+    <a href="/golm/no/acclist.php"><img src="/images/locale/no.png" alt="" title="Norsk" /></a>
+    <a href="/golm/cz/acclist.php"><img src="/images/locale/cz.png" alt="" title="Czech" /></a>
+    <a href="/golm/it/acclist.php"><img src="/images/locale/it.png" alt="" title="Italiano" /></a>
+    <!-- a href="/golm/fr/acclist.php"><img src="/images/locale/fr.gif" alt="" title="Français" /></a -->
+</div>
+<div id="container">
+    <script type="text/javascript">
+        <!--
+        function addEvent(obj, etype, event) {
+            try {
+                if (obj.attachEvent) {
+                    obj.attachEvent("on"+etype, event);
+                } else if (obj.addEventListener) {
+                    obj.addEventListener(etype, event, true);
+                } else {
+                    obj["on"+etype] = event;
+                }
+            } catch (e) {}
+        }
+        var getEventSrc = function (event, parent) {
+            var _e = (!event) ? window.event : event;
+            var eObj = (_e.target) ? _e.target : _e.srcElement;
+            if (!parent) parent = eObj.nodeName;
+            while (eObj.nodeName != parent.toUpperCase()) {
+                eObj = eObj.parentNode;
+            }
+            this.type		= _e.type;
+            this.src		= eObj;
+            this.nodeName	= eObj.nodeName;
+            this.id			= eObj.id;
+            this.className	= eObj.className;
+            this.addClass = function(className)
+            {	this.src.className += " "+className;
+            }
+            this.delClass = function(className)
+            {	_s = new RegExp(" ?" + className, '');
+                this.src.className = this.src.className.replace(_s, "");
+            }
+        }
+        var last_mhi = null;
+        function mhi(o) {
+            try {
+                if (last_mhi) {
+                    last_mhi.className = last_mhi.className.replace(/ ?mover/, "");
+                    last_mhi = null;
+                }
+                if (o) {
+                    o.className += " mover";
+                    last_mhi = o;
+                }
+            } catch (e) {}
+        }
+        var menu = null;
+        var maintitle = null;
+        var mtimeout  = null;
+        function loaddetail(ev) {
+            obj = new getEventSrc(ev, "tr")
+            location.href = target + "?day=" + obj.src.id;
+        }
+        function init_list_hover(listID) {
+            o = document.getElementById(listID);
+            if (!o) return;
+            addEvent(o, "mouseout", lho);
+            l = o.childNodes.length;
+            i = 0;
+            while (i<l) {
+                tr = o.childNodes[i];
+                if (tr.nodeName == "TBODY") {
+                    i = 0;
+                    o = tr;
+                    l = o.childNodes.length;
+                    continue;
+                }
+                if (tr.nodeName == "TR" && tr.className.indexOf("lhi") == 0) {
+                    addEvent(tr, "mouseover", lhi);
+                    if (tr.id) {
+                        addEvent(tr, "click", loaddetail);
+                        tr.style.cursor="pointer";
+                    }
+                }
+                i++;
+            }
+        }
+        var last_lhi = null;
+        function lho(e) {
+            try {
+                if (last_lhi) {
+                    last_lhi.className = last_lhi.className.replace(/ ?mover/, "");
+                    last_lhi = null;
+                }
+            } catch(e) {}
+        }
+        function lhi(e) {
+            try {
+                oc = new getEventSrc(e, "TR");
+                o = oc.src;
+                lho();
+                if (o) {
+                    o.className += " mover";
+                    last_lhi = o;
+                }
+            } catch(e) {}
+        }
+        function startup(ptarget) {
+            target = ptarget;
+            init_list_hover("acclist");
+        }
+        // -->
+    </script>
+    <div class="header">
+        <span id="ticket"> (27-154-23712 &bull; 23.750m)</span>
+        <a href="search.php">Ticketsuche</a> / Kartenverwendungen
+    </div>
+    <div class="pagetitle">Kartenverwendungen</div>
+    <div id="totals">
+        <span class="label">Gesamte H&ouml;henmeter:</span> 23.750m
+    </div>
+    <table cellspacing="0" cellpadding="3" class="detail_list" id="acclist">
+        <tr class="table_header">
+            <td style="text-align:center">#</td>
+            <td class="dt_d">Datum</td>
+            <td>Lift</td>
+            <td class="dt">Uhrzeit</td>
+            <td class="dt">H&ouml;henmeter</td>
+            <td class="dt">Fahrzeit</td>
+            <td class="stat">&nbsp;</td>
+        </tr>
+        <tr class="lhi even" id="0">
+            <td class="lineid">01&nbsp;</td>
+            <td class="dt_d"><a href="detail.php?day=0">18.11.2017</a></td>
+            <td>SN ZAM (TE) - Wi So</td>
+            <td class="dt">11:13</td>
+            <td class="dt">0m</td>
+            <td class="dt">00:00</td>
+            <td class="stat"><a href="detail.php?day=0"><img src="/images/stat.gif" alt="" /></a></td>
+        </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="1">
+        <td class="lineid">02&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=1">19.11.2017</a></td>
+        <td>SN ZAM (TE) - Wi So</td>
+        <td class="dt">12:28</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=1"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="2">
+        <td class="lineid">03&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=2">25.11.2017</a></td>
+        <td>SN ZAM (TE) - Wi So</td>
+        <td class="dt">09:33</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=2"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="3">
+        <td class="lineid">04&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=3">26.11.2017</a></td>
+        <td>VIW GOB 1 Vandans</td>
+        <td class="dt">09:57</td>
+        <td class="dt">5.000m</td>
+        <td class="dt">01:07</td>
+        <td class="stat"><a href="detail.php?day=3"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="4">
+        <td class="lineid">05&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=4">09.12.2017</a></td>
+        <td>SN VAL (T) - Wi</td>
+        <td class="dt">10:00</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=4"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="5">
+        <td class="lineid">06&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=5">10.12.2017</a></td>
+        <td>SN ZAM (TE) - Wi So</td>
+        <td class="dt">11:14</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=5"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="6">
+        <td class="lineid">07&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=6">20.12.2017</a></td>
+        <td>SN VAL (T) - Wi</td>
+        <td class="dt">09:04</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=6"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="7">
+        <td class="lineid">08&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=7">23.12.2017</a></td>
+        <td>SN VAL (T) - Wi</td>
+        <td class="dt">09:50</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=7"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="8">
+        <td class="lineid">09&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=8">25.12.2017</a></td>
+        <td>SN VAL (T) - Wi</td>
+        <td class="dt">09:21</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=8"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="9">
+        <td class="lineid">10&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=9">26.12.2017</a></td>
+        <td>SN VAL (T) - Wi</td>
+        <td class="dt">09:28</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=9"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="10">
+        <td class="lineid">11&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=10">29.12.2017</a></td>
+        <td>GAR 8EUB (T)</td>
+        <td class="dt">08:36</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=10"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="11">
+        <td class="lineid">12&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=11">30.12.2017</a></td>
+        <td>VIW GOB 1 Vandans</td>
+        <td class="dt">09:36</td>
+        <td class="dt">4.276m</td>
+        <td class="dt">00:51</td>
+        <td class="stat"><a href="detail.php?day=11"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="12">
+        <td class="lineid">13&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=12">31.12.2017</a></td>
+        <td>VIW GOB 1 Vandans</td>
+        <td class="dt">09:54</td>
+        <td class="dt">3.618m</td>
+        <td class="dt">00:45</td>
+        <td class="stat"><a href="detail.php?day=12"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="13">
+        <td class="lineid">14&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=13">05.01.2018</a></td>
+        <td>GAR 8EUB (T)</td>
+        <td class="dt">08:33</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=13"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="14">
+        <td class="lineid">15&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=14">23.01.2018</a></td>
+        <td>VIW GOB 1 Vandans</td>
+        <td class="dt">08:17</td>
+        <td class="dt">3.145m</td>
+        <td class="dt">00:42</td>
+        <td class="stat"><a href="detail.php?day=14"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="15">
+        <td class="lineid">16&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=15">03.02.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">10:34</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=15"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="16">
+        <td class="lineid">17&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=16">09.02.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">11:11</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=16"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="17">
+        <td class="lineid">18&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=17">10.02.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">12:18</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=17"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="18">
+        <td class="lineid">19&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=18">11.02.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">09:15</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=18"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="19">
+        <td class="lineid">20&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=19">10.03.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">11:02</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=19"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="20">
+        <td class="lineid">21&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=20">16.03.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">12:48</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=20"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="21">
+        <td class="lineid">22&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=21">17.03.2018</a></td>
+        <td>Palüdbahn Tal</td>
+        <td class="dt">12:03</td>
+        <td class="dt">3.277m</td>
+        <td class="dt">00:42</td>
+        <td class="stat"><a href="detail.php?day=21"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="22">
+        <td class="lineid">23&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=22">18.03.2018</a></td>
+        <td>Einhornbahn I</td>
+        <td class="dt">14:34</td>
+        <td class="dt">1.506m</td>
+        <td class="dt">00:40</td>
+        <td class="stat"><a href="detail.php?day=22"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="23">
+        <td class="lineid">24&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=23">20.03.2018</a></td>
+        <td>SN ZAM (TE) - Wi So</td>
+        <td class="dt">11:56</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=23"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="24">
+        <td class="lineid">25&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=24">21.03.2018</a></td>
+        <td>VIW GOB 1 Vandans</td>
+        <td class="dt">12:27</td>
+        <td class="dt">2.928m</td>
+        <td class="dt">00:34</td>
+        <td class="stat"><a href="detail.php?day=24"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="25">
+        <td class="lineid">26&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=25">22.03.2018</a></td>
+        <td>SN VAL (T) - Wi</td>
+        <td class="dt">10:14</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=25"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="26">
+        <td class="lineid">27&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=26">23.03.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">09:47</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=26"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="27">
+        <td class="lineid">28&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=27">24.03.2018</a></td>
+        <td>GAR 8EUB (T)</td>
+        <td class="dt">09:17</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=27"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="28">
+        <td class="lineid">29&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=28">25.03.2018</a></td>
+        <td>GAR 8EUB (T)</td>
+        <td class="dt">09:51</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=28"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="29">
+        <td class="lineid">30&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=29">29.03.2018</a></td>
+        <td>SN VAL (T) - Wi</td>
+        <td class="dt">13:03</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=29"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="30">
+        <td class="lineid">31&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=30">30.03.2018</a></td>
+        <td>GAR 8EUB (T)</td>
+        <td class="dt">08:27</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=30"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi" id="31">
+        <td class="lineid">32&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=31">06.04.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">09:33</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=31"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr><tr class="lhi even" id="32">
+        <td class="lineid">33&nbsp;</td>
+        <td class="dt_d"><a href="detail.php?day=32">07.04.2018</a></td>
+        <td>SN GRJ (T) - Wi So</td>
+        <td class="dt">10:10</td>
+        <td class="dt">0m</td>
+        <td class="dt">00:00</td>
+        <td class="stat"><a href="detail.php?day=32"><img src="/images/stat.gif" alt="" /></a></td>
+    </tr>
+        <tr><td colspan="7" class="line"><img src="/images/spacer.gif" alt="" height="1" style="float:left" /></td></tr>
+    </table>
+    <img src="/images/spacer.gif" height="10" alt="" />
+    <script type="text/javascript">
+        startup("detail.php");
+    </script>
+</div>
+<div id="container_bottom">
+    <span class="ax_bottom_url"><a href="http://www.teamaxess.com/" target="_blank">http://www.teamaxess.com/</a></span>
+    <span class="ax_bottom_copy">&copy; 2007 Axess AG </span>
+</div>
+</body>
+</html>

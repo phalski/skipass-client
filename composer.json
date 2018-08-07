@@ -1,17 +1,24 @@
 {
-    "name": "phalski/skipass",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Philipp Michalski",
-            "email": "mail@phalski.com"
-        }
-    ],
-    "require": {
-        "guzzlehttp/guzzle": "^6.3"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.2"
+  "name": "phalski/skipass",
+  "description": "phalski/skipass",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Philipp Michalski",
+      "email": "mail@phalski.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Phalski\\Skipass\\": "src/"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^6.3",
+    "spatie/regex": "^1.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.2"
+  }
 }
