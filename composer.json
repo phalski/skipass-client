@@ -15,6 +15,7 @@
     }
   },
   "require": {
+    "ext-json": "*",
     "guzzlehttp/guzzle": "^6.3",
     "spatie/regex": "^1.3"
   },
