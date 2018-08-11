@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Phalski\Skipass\Model;
+namespace Phalski\Skipass;
 
 use DateTime;
 use JsonSerializable;
@@ -38,8 +38,8 @@ class Day implements JsonSerializable
         $this->rides = $rides;
     }
 
-    public static function for(Detail $detail, int $dayId): self {
-        return new self($dayId, $detail->getDate(), $detail->getRides());
+    public static function for(Detail $detail, int $day_id): self {
+        return new self($day_id, $detail->getDate(), $detail->getRides());
     }
 
     /**

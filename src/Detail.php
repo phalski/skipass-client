@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalski\Skipass\Model;
+namespace Phalski\Skipass;
 
 use DateTime;
 
@@ -11,9 +11,9 @@ use DateTime;
 class Detail
 {
     /**
-     * @var PassId
+     * @var Ticket
      */
-    private $passId;
+    private $ticket;
     /**
      * @var DateTime
      */
@@ -29,33 +29,33 @@ class Detail
 
     /**
      * Detail constructor.
-     * @param PassId $passId
+     * @param Ticket $ticket
      * @param DateTime $date
      * @param array $rides
      * @param array $lifts
      */
-    public function __construct(PassId $passId, DateTime $date, array $rides, array $lifts)
+    public function __construct(Ticket $ticket, DateTime $date, array $rides, array $lifts)
     {
-        $this->passId = $passId;
+        $this->ticket = $ticket;
         $this->date = $date;
         $this->rides = $rides;
         $this->lifts = $lifts;
     }
 
     /**
-     * @return PassId
+     * @return Ticket
      */
-    public function getPassId(): PassId
+    public function getTicket(): Ticket
     {
-        return $this->passId;
+        return $this->ticket;
     }
 
     /**
-     * @param PassId $passId
+     * @param Ticket $ticket
      */
-    public function setPassId(PassId $passId): void
+    public function setTicket(Ticket $ticket): void
     {
-        $this->passId = $passId;
+        $this->ticket = $ticket;
     }
 
     /**
