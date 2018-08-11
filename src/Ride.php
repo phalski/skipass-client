@@ -1,6 +1,6 @@
 <?php
 
-namespace Phalski\Skipass\Model;
+namespace Phalski\Skipass;
 
 use DateTime;
 use JsonSerializable;

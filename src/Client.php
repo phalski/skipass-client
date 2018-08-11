@@ -22,27 +22,37 @@ class Client
     /**
      * @var \GuzzleHttp\Client
      */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var string
-     */
-    private $project_id;
-
-    /**
-     * @var bool|null
-     */
-    private $has_multiple_days;
+    protected $client;
 
     /**
      * @var bool
      */
-    private $is_ready;
+    protected $is_ready;
+
+    /**
+     * @var bool|null
+     */
+    protected $has_multiple_days;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @var string
+     */
+    protected $project_id;
+
+    /**
+     * @var Ticket|null
+     */
+    protected $ticket;
+
+    /**
+     * @var Wtp|null
+     */
+    protected $wtp;
 
     /**
      * Client constructor.
@@ -152,6 +162,42 @@ class Client
         $this->ensureReady();
         return $this->has_multiple_days;
     }
+
+    /**
+     * @return string
+     */
+    public function getLocale(): string
+    {
+        $this->ensureReady();
+        return $this->locale;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProjectId(): string
+    {
+        $this->ensureReady();
+        return $this->project_id;
+    }
+
+    /**
+     * @return null|Ticket
+     */
+    public function getTicket(): ?Ticket
+    {
+        return $this->ticket;
+    }
+
+    /**
+     * @return null|Wtp
+     */
+    public function getWtp(): ?Wtp
+    {
+        return $this->wtp;
+    }
+
+
 
     /**
      * @return string

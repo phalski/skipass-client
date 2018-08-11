@@ -13,26 +13,21 @@ use NumberFormatter;
 use Spatie\Regex\Regex;
 use Spatie\Regex\RegexFailed;
 
-use Phalski\Skipass\Model\Detail;
-use Phalski\Skipass\Model\Lift;
-use Phalski\Skipass\Model\PassId;
-use Phalski\Skipass\Model\Ride;
-
 /**
- * Class Selectors
+ * Class Selector
  * @package Phalski\Skipass
  */
-class Selectors
+class Selector
 {
-    private $timeZone;
+    private $timezone;
 
     /**
-     * Selectors constructor.
+     * Selector constructor.
      * @var string $timezone
      */
     public function __construct(string $timezone = 'Europe/Berlin')
     {
-        $this->timeZone = new DateTimeZone($timezone);
+        $this->timezone = new DateTimeZone($timezone);
     }
 
     public static function xPathFor(string $source, bool $strict = true, $options = 0): DOMXPath
@@ -41,9 +36,9 @@ class Selectors
         if ($strict) {
             $doc->loadHTML($source, $options);
         } else {
-            $internalErrors = libxml_use_internal_errors(true);
+            $internal_errors = libxml_use_internal_errors(true);
             $doc->loadHTML($source);
-            libxml_use_internal_errors($internalErrors);
+            libxml_use_internal_errors($internal_errors);
         }
         return new DOMXPath($doc);
     }
@@ -70,9 +65,9 @@ class Selectors
     {
         $xpath = self::xPathFor($html, false);
 
-        $passId = self::capturePassId($xpath->query('//*[@id="ticket"]')->item(0)->textContent);
-        if (is_null($passId)) {
-            throw new UnexpectedContentException('Failed to extract passId from content');
+        $ticket = self::captureTicket($xpath->query('//*[@id="ticket"]')->item(0)->textContent);
+        if (is_null($ticket)) {
+            throw new UnexpectedContentException('Failed to extract ticket from content');
         }
 
         $date = self::captureDate($xpath->query('//*[@id="container"]/div[2]')->item(0)->textContent);
@@ -106,19 +101,19 @@ class Selectors
             array_push($rides, $ride);
         }
 
-        return new Detail($passId, $date, $rides, $lifts);
+        return new Detail($ticket, $date, $rides, $lifts);
     }
 
     // capture
 
-    private static function capturePassId(string $textContent): ?PassId
+    private static function captureTicket(string $textContent): ?Ticket
     {
         $match = Regex::match('/(?P<passId>\d+-\d+-\d+)/', $textContent);
         if (!$match->hasMatch()) {
             return null;
         }
         try {
-            return PassId::for($match->group('passId'));
+            return Ticket::for($match->group('passId'));
         } catch (RegexFailed | InvalidIdException $e) {
             return null;
         }
@@ -130,7 +125,7 @@ class Selectors
             return null;
         }
         try {
-            $date = DateTime::createFromFormat('d.m.Y', $match->group('date'), $this->timeZone);
+            $date = DateTime::createFromFormat('d.m.Y', $match->group('date'), $this->timezone);
             $date->setTime(0,0);
             return $date;
         } catch (RegexFailed $e) {
