@@ -127,7 +127,7 @@ class Skipass
         $this->updateCount();
 
         if ($offset < 0 || $this->count <= $offset) {
-            throw new InvalidArgumentException('Offset "' . $offset . '" exceeds day count');
+            throw new InvalidArgumentException('Invalid offset "' . $offset . '" for day count '.$this->count);
         }
 
         $upperBound = ((0 <= $first) && ($offset + $first < $this->count)) ? $offset + $first : $this->count;
