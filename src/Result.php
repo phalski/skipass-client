@@ -21,7 +21,7 @@ class Result implements JsonSerializable
      * @param Data $data
      * @param array $errors
      */
-    public function __construct(Data $data, array $errors = [])
+    public function __construct(?Data $data, array $errors = [])
     {
         $this->data = $data;
         $this->errors = $errors;

@@ -20,17 +20,17 @@ class Ticket implements JsonSerializable
     /**
      * @var string
      */
-    private $project;
+    protected $project;
 
     /**
      * @var string
      */
-    private $pos;
+    protected $pos;
 
     /**
      * @var string
      */
-    private $serial;
+    protected $serial;
 
     /**
      * PassId constructor.
@@ -49,7 +49,7 @@ class Ticket implements JsonSerializable
     /**
      * @param $ticket
      * @return Ticket
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function for($ticket): self
     {
@@ -58,7 +58,6 @@ class Ticket implements JsonSerializable
             return new static($result->group(1), $result->group(2), $result->group(3));
         } catch (RegexFailed $e) {
             throw new InvalidArgumentException(sprintf('Failed to parse ticket \'%s\'', $ticket), 0, $e);
-
         }
     }
 
@@ -89,7 +88,8 @@ class Ticket implements JsonSerializable
     /**
      * @return string
      */
-    public function getId(): string {
+    public function getId(): string
+    {
         return join('-', [$this->getProject(), $this->getPos(), $this->getSerial()]);
     }
 
