@@ -1,9 +1,9 @@
 <?php
 
-namespace Phalski\Skipass\Model;
+namespace Phalski\Skipass;
 
 
-class SelectorsTest extends \PHPUnit\Framework\TestCase
+class SelectorTest extends \PHPUnit\Framework\TestCase
 {
     protected static $sourceAcclistDe;
     protected static $sourceAcclistEn;
@@ -12,7 +12,7 @@ class SelectorsTest extends \PHPUnit\Framework\TestCase
     protected static $sourceDetail21De;
     protected static $sourceDetail21En;
 
-    protected $selectors;
+    protected $selector;
 
     public static function setUpBeforeClass()/* The :void return type declaration that should be here would cause a BC issue */
     {
@@ -28,17 +28,18 @@ class SelectorsTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
-        $this->selectors = new Selectors();
+        parent::setUp();
+        $this->selector = new Selector();
 
     }
 
     public function testDayCount()
     {
-        $this->assertEquals(33, $this->selectors->dayCount(self::$sourceAcclistDe));
-        $this->assertEquals(33, $this->selectors->dayCount(self::$sourceAcclistEn));
+        $this->assertEquals(33, $this->selector->dayCount(self::$sourceAcclistDe));
+        $this->assertEquals(33, $this->selector->dayCount(self::$sourceAcclistEn));
     }
 
     public function testDetail0() {
-        var_dump($this->selectors->detail(self::$sourceDetail21De));
+        var_dump($this->selector->detail(self::$sourceDetail21De));
     }
 }
