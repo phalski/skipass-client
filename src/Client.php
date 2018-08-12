@@ -4,6 +4,7 @@
 namespace Phalski\Skipass;
 
 
+use GuzzleHttp\Promise\PromiseInterface;
 use InvalidArgumentException;
 use LogicException;
 use Psr\Http\Message\ResponseInterface;
@@ -75,7 +76,8 @@ class Client
      * @param string $locale
      * @return Client
      */
-    public static function for(string $project_id, string $base_uri = 'http://kv.skipass.cx', string $locale = 'en') {
+    public static function for(string $project_id, string $base_uri = 'http://kv.skipass.cx', string $locale = 'en')
+    {
         $client = new \GuzzleHttp\Client([
             'allow_redirects' => false,
             'base_uri' => $base_uri,
@@ -101,7 +103,6 @@ class Client
         $this->clear();
         $this->project_id = $project_id;
     }
-
 
 
     /**
@@ -198,7 +199,6 @@ class Client
     }
 
 
-
     /**
      * @return string
      */
@@ -219,13 +219,24 @@ class Client
     }
 
     /**
+     * @param int $day_id
+     * @return string
+     */
+    public function getDetailContentsAsync(int $day_id): PromiseInterface
+    {
+        $this->ensureReady();
+        return $this->client->getAsync($this->detailUri($day_id))->then(function (ResponseInterface $r) {
+            return $r->getBody()->getContents();
+        });
+    }
+
+    /**
      * @return bool|null
      */
     public function isReady(): bool
     {
         return $this->is_ready;
     }
-
 
 
     /**

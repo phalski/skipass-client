@@ -61,7 +61,7 @@ class Selector
      * @return Detail
      * @throws UnexpectedContentException
      */
-    public function detail($html): Detail
+    public function detail(string $html): Detail
     {
         $xpath = self::xPathFor($html, false);
 
