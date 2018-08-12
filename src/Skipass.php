@@ -4,7 +4,7 @@
 namespace Phalski\Skipass;
 
 use function GuzzleHttp\Promise\settle;
-use function GuzzleHttp\Promise\unwrap;
+use Exception;
 use InvalidArgumentException;
 
 class Skipass
@@ -29,6 +29,7 @@ class Skipass
      * Skipass constructor.
      * @param Client $client
      * @param Selector $selector
+     * @throws InvalidArgumentException
      */
     public function __construct(Client $client, Selector $selector)
     {
@@ -39,7 +40,15 @@ class Skipass
         $this->selector = $selector;
     }
 
-    public static function for(string $project_id, Ticket $ticket)
+
+    /**
+     * @param string $project_id
+     * @param Ticket $ticket
+     * @return Skipass
+     * @throws FetchException
+     * @throws NotFoundException
+     */
+    public static function for(string $project_id, Ticket $ticket): self
     {
         $client = Client::for($project_id);
         $client->setTicket($ticket);
@@ -47,6 +56,10 @@ class Skipass
         return new Skipass($client, $selector);
     }
 
+
+    /**
+     * @throws FetchException
+     */
     public function updateCount()
     {
         if ($this->client->hasMultipleDays()) {
@@ -57,77 +70,43 @@ class Skipass
         }
     }
 
-    public function findById(int $day_id)
+    /**
+     * @param int $day_id
+     * @return Result
+     * @throws FetchException
+     * @throws InvalidArgumentException
+     */
+    public function findById(int $day_id): Result
     {
         $this->updateCount();
         $this->ensureValidDayId($day_id);
 
-        $content = $this->client->getDetailContents($day_id);
-        $detail = $this->selector->detail($content);
+        try {
+            $content = $this->client->getDetailContents($day_id);
+            $detail = $this->selector->detail($content);
 
-        $lifts = $detail->getLifts();
-        usort($lifts, function ($a, $b) {
-            return strcmp($a->getId(), $b->getId());
-        });
+            $lifts = $detail->getLifts();
+            usort($lifts, function ($a, $b) {
+                return strcmp($a->getId(), $b->getId());
+            });
 
-        return new Data(
-            $this->client->getProjectId(),
-            $this->client->getLocale(),
-            $this->client->getTicket() ?? $detail->getTicket(),
-            $this->client->getWtp(),
-            [Day::for($detail, $day_id)],
-            $lifts
-        );
+            return new Result(new Data(
+                $this->client->getProjectId(),
+                $this->client->getLocale(),
+                $this->client->getTicket() ?? $detail->getTicket(),
+                $this->client->getWtp(),
+                [Day::for($detail, $day_id)],
+                $lifts
+            ));
+        } catch (Exception $e) {
+            return new Result(null, [$day_id => $e]);
+        }
     }
 
-    public function findAll($first = 50, $offset = 0)
-    {
-        $this->updateCount();
-        echo $this->count;
-        if ($offset < 0 || $this->count <= $offset) {
-            throw new InvalidArgumentException('Offset "' . $offset . '" exceeds day count');
-        }
-
-        $upperBound = ((0 <= $first) && ($offset + $first < $this->count)) ? $offset + $first : $this->count;
-
-        $ticket = null;
-        $days = [];
-        $lifts = [];
-        $errors = [];
-
-        for ($i = $offset; $i < $upperBound; $i++) {
-            try {
-                $content = $this->client->getDetailContents($i);
-                $detail = $this->selector->detail($content);
-
-                if (is_null($ticket)) {
-                    $ticket = $detail->getTicket();
-                }
-
-                array_push($days, Day::for($detail, $i));
-
-                foreach ($detail->getLifts() as $lift) {
-                    if (empty($lifts[$lift->getId()])) {
-                        $lifts[$lift->getId()] = $lift;
-                    }
-                }
-            } catch (UnexpectedContentException $e) {
-                $errors[$i] = $e;
-            }
-        }
-
-        ksort($lifts);
-
-        return new Result(new Data(
-            $this->client->getProjectId(),
-            $this->client->getLocale(),
-            $this->client->getTicket() ?? $ticket,
-            $this->client->getWtp(),
-            $days,
-            $lifts
-        ), $errors);
-    }
-
+    /**
+     * @return int
+     * @throws FetchException
+     */
     public function count(): int
     {
         if (is_null($this->count)) {
@@ -136,7 +115,14 @@ class Skipass
         return $this->count;
     }
 
-    public function findAllAsync($first = 50, $offset = 0)
+    /**
+     * @param int $first
+     * @param int $offset
+     * @return Result
+     * @throws FetchException
+     * @throws InvalidArgumentException
+     */
+    public function findAll($first = 50, $offset = 0): Result
     {
         $this->updateCount();
 
@@ -160,7 +146,7 @@ class Skipass
 
         foreach ($results as $day_id => $promise) {
             if ($promise['state'] !== 'fulfilled') {
-                $errors[$day_id] = new \LogicException('Request failed');
+                $errors[$day_id] = $promise['value'];
                 continue;
             }
 

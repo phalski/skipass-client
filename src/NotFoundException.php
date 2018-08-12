@@ -5,6 +5,6 @@ namespace Phalski\Skipass;
 
 use Exception;
 
-class ContextNotFoundException extends Exception
+class NotFoundException extends Exception
 {
 }

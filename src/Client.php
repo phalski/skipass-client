@@ -3,10 +3,9 @@
 
 namespace Phalski\Skipass;
 
-
+use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use InvalidArgumentException;
-use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Spatie\Regex\Regex;
 
@@ -63,6 +62,9 @@ class Client
      */
     public function __construct(string $project_id, \GuzzleHttp\Client $client, string $locale)
     {
+        if (empty($project_id)) {
+            throw new InvalidArgumentException('Empty project_id');
+        }
         $this->project_id = $project_id;
         $this->client = $client;
         $this->locale = $locale;
@@ -76,7 +78,7 @@ class Client
      * @param string $locale
      * @return Client
      */
-    public static function for(string $project_id, string $base_uri = 'http://kv.skipass.cx', string $locale = 'en')
+    public static function for(string $project_id, string $base_uri = 'http://kv.skipass.cx', string $locale = 'en'): self
     {
         $client = new \GuzzleHttp\Client([
             'allow_redirects' => false,
@@ -107,51 +109,64 @@ class Client
 
     /**
      * @param Ticket $ticket
+     * @throws FetchException
+     * @throws NotFoundException
      */
     public function setTicket(Ticket $ticket): void
     {
         $this->clear();
 
-        $response = $this->client->post($this->searchUri(), [
-            'form_params' => [
-                'search' => 'ticket',
-                'nProjectNO' => $ticket->getProject(),
-                'nPOSNO' => $ticket->getPos(),
-                'nSerialNO' => $ticket->getSerial(),
-            ]
-        ]);
-
-        $this->has_multiple_days = $this->testDays($response);
-
-        if (is_null($this->has_multiple_days)) {
-            throw new InvalidArgumentException('Ticket not found: ' . $ticket);
+        try {
+            $response = $this->client->post($this->searchUri(), [
+                'form_params' => [
+                    'search' => 'ticket',
+                    'nProjectNO' => $ticket->getProject(),
+                    'nPOSNO' => $ticket->getPos(),
+                    'nSerialNO' => $ticket->getSerial(),
+                ]
+            ]);
+            $this->has_multiple_days = $this->testDays($response);
+        } catch (Exception $e) {
+            throw new FetchException('Failed to fetch search result for ticket: '.$ticket,0, $e);
         }
 
+        if (is_null($this->has_multiple_days)) {
+            throw new NotFoundException('Ticket not found: ' . $ticket);
+        }
+
+        $this->ticket = $ticket;
         $this->ready();
     }
 
+
     /**
-     * @param $wtp
+     * @param Wtp $wtp
+     * @throws FetchException
+     * @throws NotFoundException
      */
-    public function setWtp($wtp): void
+    public function setWtp(Wtp $wtp): void
     {
         $this->clear();
 
-        $response = $this->client->post($this->searchUri(), [
-            'form_params' => [
-                'search' => 'wtp',
-                'szChipID' => $wtp->getChipId(),
-                'szChipIDCRC' => $wtp->getChipIdCrc(),
-                'szAcceptID' => $wtp->getAcceptId(),
-            ]
-        ]);
-
-        $this->has_multiple_days = $this->testDays($response);
-
-        if (is_null($this->has_multiple_days)) {
-            throw new InvalidArgumentException('WTP not found: ' . $wtp);
+        try {
+            $response = $this->client->post($this->searchUri(), [
+                'form_params' => [
+                    'search' => 'wtp',
+                    'szChipID' => $wtp->getChipId(),
+                    'szChipIDCRC' => $wtp->getChipIdCrc(),
+                    'szAcceptID' => $wtp->getAcceptId(),
+                ]
+            ]);
+            $this->has_multiple_days = $this->testDays($response);
+        } catch (Exception $e) {
+            throw new FetchException('Failed to fetch search result for wtp: '.$wtp,0, $e);
         }
 
+        if (is_null($this->has_multiple_days)) {
+            throw new NotFoundException('WTP not found: ' . $wtp);
+        }
+
+        $this->wtp = $wtp;
         $this->ready();
     }
 
@@ -201,32 +216,44 @@ class Client
 
     /**
      * @return string
+     * @throws FetchException
      */
     public function getAccessListContents(): string
     {
         $this->ensureReady();
-        return $this->client->get($this->accessListUri())->getBody()->getContents();
+        try {
+            return $this->client->get($this->accessListUri())->getBody()->getContents();
+        } catch (Exception $e) {
+            throw new FetchException('Failed to fetch access list for ticket or wtp: '. $this->ticket ?? $this->wtp,0, $e);
+        }
     }
 
     /**
      * @param int $day_id
      * @return string
+     * @throws FetchException
      */
     public function getDetailContents(int $day_id): string
     {
         $this->ensureReady();
-        return $this->client->get($this->detailUri($day_id))->getBody()->getContents();
+        try {
+            return $this->client->get($this->detailUri($day_id))->getBody()->getContents();
+        } catch (Exception $e) {
+            throw new FetchException('Failed to fetch day='.$day_id.' details for ticket or wtp: '. $this->ticket ?? $this->wtp,0, $e);
+        }
     }
 
     /**
      * @param int $day_id
-     * @return string
+     * @return PromiseInterface
      */
     public function getDetailContentsAsync(int $day_id): PromiseInterface
     {
         $this->ensureReady();
         return $this->client->getAsync($this->detailUri($day_id))->then(function (ResponseInterface $r) {
             return $r->getBody()->getContents();
+        }, function (Exception $e) {
+            return new FetchException('Failed to fetch detail for ticket or wtp: '. $this->ticket ?? $this->wtp,0, $e);
         });
     }
 
@@ -246,6 +273,8 @@ class Client
     {
         $this->is_ready = false;
         $this->has_multiple_days = null;
+        $this->ticket = null;
+        $this->wtp = null;
     }
 
     /**
@@ -256,13 +285,14 @@ class Client
         $this->is_ready = true;
     }
 
+
     /**
-     *
+     * @throws NotReadyException
      */
     private function ensureReady(): void
     {
         if (!$this->is_ready) {
-            throw new LogicException('Client is not ready. Set a ticket or wtp!');
+            throw new NotReadyException('Client is not ready. Set a ticket or wtp!');
         }
     }
 
