@@ -9,6 +9,7 @@ use DOMDocument;
 use DOMNode;
 use DOMXPath;
 use Exception;
+use InvalidArgumentException;
 use NumberFormatter;
 use Spatie\Regex\Regex;
 use Spatie\Regex\RegexFailed;
@@ -114,7 +115,7 @@ class Selector
         }
         try {
             return Ticket::for($match->group('passId'));
-        } catch (RegexFailed | InvalidIdException $e) {
+        } catch (RegexFailed | InvalidArgumentException $e) {
             return null;
         }
     }
