@@ -1,5 +1,6 @@
 {
   "name": "phalski/skipass",
+  "version": "0.0.1-dev",
   "description": "phalski/skipass",
   "type": "library",
   "license": "MIT",
