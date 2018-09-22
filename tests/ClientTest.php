@@ -40,6 +40,17 @@ class ClientTest extends \PHPUnit\Framework\TestCase
         $this->client = Client::for('golm');
     }
 
+    public function testSetProjectId()
+    {
+        $client = Client::for('golm');
+    }
+
+    public function testSetInvalidProjectId()
+    {
+        $this->expectException(NotFoundException::class);
+        $client = Client::for('asdf');
+    }
+
     public function testSetSingleTicket()
     {
         $this->client->setTicket(self::$validSingleTicket);
@@ -58,7 +69,7 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
     public function testSetInvalidTicket()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NotFoundException::class);
         $this->client->setTicket(self::$invalidTicket);
     }
 
@@ -96,19 +107,19 @@ class ClientTest extends \PHPUnit\Framework\TestCase
 
     public function testNotReadyAccessList()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(NotReadyException::class);
         $this->client->getAccessListContents();
     }
 
     public function testNotReadyDetail()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(NotReadyException::class);
         $this->client->getDetailContents(0);
     }
 
     public function testNotReadyHasMultipleDays()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(NotReadyException::class);
         $this->client->hasMultipleDays();
     }
 }

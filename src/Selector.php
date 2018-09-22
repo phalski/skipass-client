@@ -105,6 +105,10 @@ class Selector
         return new Detail($ticket, $date, $rides, $lifts);
     }
 
+    public static function hasSearch($html): bool {
+        return 0 < self::xPathFor($html)->query('//*[@id="search"]')->count();
+    }
+
     // capture
 
     private static function captureTicket(string $textContent): ?Ticket

@@ -80,9 +80,9 @@ class Data implements JsonSerializable
     }
 
     /**
-     * @return Wtp
+     * @return Wtp|null
      */
-    public function getWtp(): Wtp
+    public function getWtp():?Wtp
     {
         return $this->wtp;
     }

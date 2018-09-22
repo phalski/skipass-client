@@ -40,7 +40,7 @@ class Client
     protected $locale;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $project_id;
 
@@ -59,16 +59,20 @@ class Client
      * @param $project_id
      * @param $client
      * @param $locale
+     * @throws FetchException
+     * @throws NotFoundException
      */
     public function __construct(string $project_id, \GuzzleHttp\Client $client, string $locale)
     {
         if (empty($project_id)) {
             throw new InvalidArgumentException('Empty project_id');
         }
-        $this->project_id = $project_id;
         $this->client = $client;
         $this->locale = $locale;
         $this->is_ready = false;
+
+        // requires client and locale
+        $this->setProjectId($project_id);
     }
 
 
@@ -76,6 +80,8 @@ class Client
      * @param string $project_id
      * @param string $base_uri
      * @param string $locale
+     * @throws FetchException
+     * @throws NotFoundException
      * @return Client
      */
     public static function for(string $project_id, string $base_uri = 'http://kv.skipass.cx', string $locale = 'en'): self
@@ -99,10 +105,24 @@ class Client
 
     /**
      * @param string $project_id
+     * @throws FetchException
+     * @throws NotFoundException
      */
     public function setProjectId(string $project_id): void
     {
         $this->clear();
+
+        $html = null;
+        try {
+            $html = $this->client->get('/' . $project_id . '/' . $this->locale . '/search.php')->getBody()->getContents();
+        } catch (Exception $e) {
+            throw new FetchException('Failed to fetch search page for project_id: '.$project_id,0, $e);
+        }
+
+        if (!Selector::hasSearch($html)) {
+            throw new NotFoundException('ProjectId not found: '.$project_id);
+        }
+
         $this->project_id = $project_id;
     }
 
@@ -202,6 +222,7 @@ class Client
      */
     public function getTicket(): ?Ticket
     {
+        $this->ensureReady();
         return $this->ticket;
     }
 
@@ -210,6 +231,7 @@ class Client
      */
     public function getWtp(): ?Wtp
     {
+        $this->ensureReady();
         return $this->wtp;
     }
 
