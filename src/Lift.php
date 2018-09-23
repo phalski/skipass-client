@@ -60,9 +60,9 @@ class Lift implements JsonSerializable
     }
 
     /**
-     * @return float
+     * @return float\null
      */
-    public function getLowerElevationMeters(): float
+    public function getLowerElevationMeters(): ?float
     {
         return $this->lowerElevationMeters;
     }
@@ -76,9 +76,9 @@ class Lift implements JsonSerializable
     }
 
     /**
-     * @return float
+     * @return float\null
      */
-    public function getUpperElevationMeters(): float
+    public function getUpperElevationMeters(): ?float
     {
         return $this->upperElevationMeters;
     }
@@ -92,9 +92,9 @@ class Lift implements JsonSerializable
     }
 
     /**
-     * @return DateInterval
+     * @return DateInterval\null
      */
-    public function getRideDuration(): DateInterval
+    public function getRideDuration(): ?DateInterval
     {
         return $this->rideDuration;
     }
