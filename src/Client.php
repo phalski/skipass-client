@@ -117,7 +117,7 @@ class Client
      * @throws \LogicException
      * @throws NotFoundException
      */
-    public function ensureValidateProjectId()
+    public function ensureValidProjectId()
     {
         if (is_null($this->project_id)) {
             throw new \LogicException('No project id set');
