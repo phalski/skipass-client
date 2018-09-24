@@ -105,25 +105,34 @@ class Client
 
     /**
      * @param string $project_id
-     * @throws FetchException
-     * @throws NotFoundException
      */
     public function setProjectId(string $project_id): void
     {
         $this->clear();
+        $this->project_id = $project_id;
+    }
+
+    /**
+     * @throws FetchException
+     * @throws \LogicException
+     * @throws NotFoundException
+     */
+    public function ensureValidateProjectId()
+    {
+        if (is_null($this->project_id)) {
+            throw new \LogicException('No project id set');
+        }
 
         $html = null;
         try {
-            $html = $this->client->get('/' . $project_id . '/' . $this->locale . '/search.php')->getBody()->getContents();
+            $html = $this->client->get('/' . $this->project_id . '/' . $this->locale . '/search.php')->getBody()->getContents();
         } catch (Exception $e) {
-            throw new FetchException('Failed to fetch search page for project_id: '.$project_id,0, $e);
+            throw new FetchException('Failed to fetch search page for project_id: ' . $this->project_id, 0, $e);
         }
 
         if (!Selector::hasSearch($html)) {
-            throw new NotFoundException('ProjectId not found: '.$project_id);
+            throw new NotFoundException('ProjectId not found: ' . $this->project_id);
         }
-
-        $this->project_id = $project_id;
     }
 
 
@@ -147,7 +156,7 @@ class Client
             ]);
             $this->has_multiple_days = $this->testDays($response);
         } catch (Exception $e) {
-            throw new FetchException('Failed to fetch search result for ticket: '.$ticket,0, $e);
+            throw new FetchException('Failed to fetch search result for ticket: ' . $ticket, 0, $e);
         }
 
         if (is_null($this->has_multiple_days)) {
@@ -179,7 +188,7 @@ class Client
             ]);
             $this->has_multiple_days = $this->testDays($response);
         } catch (Exception $e) {
-            throw new FetchException('Failed to fetch search result for wtp: '.$wtp,0, $e);
+            throw new FetchException('Failed to fetch search result for wtp: ' . $wtp, 0, $e);
         }
 
         if (is_null($this->has_multiple_days)) {
@@ -246,7 +255,7 @@ class Client
         try {
             return $this->client->get($this->accessListUri())->getBody()->getContents();
         } catch (Exception $e) {
-            throw new FetchException('Failed to fetch access list for ticket or wtp: '. $this->ticket ?? $this->wtp,0, $e);
+            throw new FetchException('Failed to fetch access list for ticket or wtp: ' . $this->ticket ?? $this->wtp, 0, $e);
         }
     }
 
@@ -261,7 +270,7 @@ class Client
         try {
             return $this->client->get($this->detailUri($day_id))->getBody()->getContents();
         } catch (Exception $e) {
-            throw new FetchException('Failed to fetch day='.$day_id.' details for ticket or wtp: '. $this->ticket ?? $this->wtp,0, $e);
+            throw new FetchException('Failed to fetch day=' . $day_id . ' details for ticket or wtp: ' . $this->ticket ?? $this->wtp, 0, $e);
         }
     }
 
@@ -275,7 +284,7 @@ class Client
         return $this->client->getAsync($this->detailUri($day_id))->then(function (ResponseInterface $r) {
             return $r->getBody()->getContents();
         }, function (Exception $e) {
-            return new FetchException('Failed to fetch detail for ticket or wtp: '. $this->ticket ?? $this->wtp,0, $e);
+            return new FetchException('Failed to fetch detail for ticket or wtp: ' . $this->ticket ?? $this->wtp, 0, $e);
         });
     }
 
