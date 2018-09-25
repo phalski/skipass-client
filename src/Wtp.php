@@ -10,7 +10,7 @@ use Spatie\Regex\RegexFailed;
 
 class Wtp implements JsonSerializable
 {
-    private const PATTERN = '/^(\d+)-(\d+)-(\d+)\z/';
+    private const PATTERN = '/^([0-9A-Za-z]{8})-([0-9A-Za-z]{3})-([0-9A-Za-z]{3})\z/';
 
     /**
      * @var string
